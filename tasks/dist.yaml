@@ -1,0 +1,20 @@
+---
+platform: linux
+image_resource:
+ type: docker-image
+ source:
+   repository: golang
+   tag: '1.7.3'
+
+inputs:
+  - name: src
+    path: src/github.com/hpcloud/stampy
+  - name: src-ci
+  - name: tools
+    path: bin
+  - name: build
+outputs:
+  - name: dist
+    path: stampy
+run:
+  path: src-ci/tasks/dist.sh

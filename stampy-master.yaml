@@ -1,0 +1,104 @@
+resources:
+- name: src
+  type: git
+  source:
+    uri: git@github.com:hpcloud/stampy.git
+    branch: master
+    private_key: {{git-private-key}}
+
+- name: src-ci
+  type: git
+  source:
+    uri: git@github.com:SUSE/stampy-ci.git
+    branch: master
+    private_key: {{git-private-key}}
+
+- name: stampy-binary-linux
+  source:
+    access_key_id: {{s3-access-key}}
+    endpoint: {{s3-endpoint}}
+    secret_access_key: {{s3-secret-key}}
+    bucket: stampy
+    regexp: stampy-(.*)\.g.*linux.amd64\.tgz
+    private: true
+
+- name: stampy-binary-darwin
+  source:
+    access_key_id: {{s3-access-key}}
+    endpoint: {{s3-endpoint}}
+    secret_access_key: {{s3-secret-key}}
+    bucket: stampy
+    regexp: stampy-(.*)\.g.*darwin.amd64\.tgz
+    private: true
+
+jobs:
+- name: vet
+  plan:
+  - aggregate:
+    - get: src-ci
+      trigger: true
+    - get: src
+      trigger: true
+  - task: vet
+    file: src-ci/tasks/vet.yaml
+
+- name: test
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: test
+    privileged: true
+    file: src-ci/tasks/test.yaml
+
+- name: lint
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: lint
+    file: src-ci/tasks/lint.yaml
+
+- name: format
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: format
+    file: src-ci/tasks/format.yaml
+
+- name: dist
+  plan:
+  - aggregate:
+    - get: src
+      passed: [vet, lint, format, test]
+      trigger: true
+    - get: src-ci
+      passed: [vet, lint, format, test]
+      trigger: true
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: build
+    file: src-ci/tasks/build.yaml
+  - task: dist
+    file: src-ci/tasks/dist.yaml
+  - put: stampy-binary-linux
+    params:
+      file: dist/stampy-*linux-*.tgz
+      acl: public-read
+  - put: stampy-binary-darwin
+    params:
+      file: dist/stampy-*darwin-*.tgz
+      acl: public-read
