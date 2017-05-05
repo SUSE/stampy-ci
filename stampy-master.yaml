@@ -14,6 +14,7 @@ resources:
     private_key: {{github-private-key}}
 
 - name: stampy-binary-linux
+  type: s3
   source:
     access_key_id: {{s3-access-key}}
     endpoint: {{s3-endpoint}}
@@ -23,6 +24,7 @@ resources:
     private: true
 
 - name: stampy-binary-darwin
+  type: s3
   source:
     access_key_id: {{s3-access-key}}
     endpoint: {{s3-endpoint}}
