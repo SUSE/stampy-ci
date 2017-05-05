@@ -12,9 +12,8 @@ The build pipelines each expose the make targets:
 - format
 - build/dist
 
-To set-pipeline, ((get secrets from ...))
-
-Then (assuming your instance is called "lol") do a set-pipeline like this:
+To set-pipeline (assuming your instance is called "lol") use the the
+helpers like this:
 
 ```bash
 ./set-master lol
@@ -22,12 +21,14 @@ Then (assuming your instance is called "lol") do a set-pipeline like this:
 ```
 
 If the secrets are not in the directory `../cloudfoundry/secure`,
-i.e. sibling to this CI repository, you can instead use
+i.e. a sibling to this CI repository, instead use
 
 ```bash
 ./set-master lol /path/to/cloudfoundry/secure
 ./set-check lol /path/to/cloudfoundry/secure
 ```
+
+to explicitly tell the commands the location of the secrets.
 
 ## Testing notes
 
@@ -52,5 +53,5 @@ repo to avoid repeated pushes to the remote repo.
   source:
     uri: git://192.168.1.1/
     branch: master
-    private_key: {{git-private-key}}
+    private_key: {{github-private-key}}
 ```
