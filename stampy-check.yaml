@@ -4,7 +4,7 @@ resources:
   source:
     access_token: {{github-access-token}}
     branch: master
-    private_key: {{git-private-key}}
+    private_key: {{github-private-key}}
     uri: git@github.com:hpcloud/stampy.git
 
 - name: status
@@ -17,7 +17,7 @@ resources:
   type: git
   source:
     branch: master
-    private_key: {{git-private-key}}
+    private_key: {{github-private-key}}
     uri: git@github.com:SUSE/stampy-ci.git
 
 - name: stampy-binary-linux

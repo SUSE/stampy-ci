@@ -4,14 +4,14 @@ resources:
   source:
     uri: git@github.com:hpcloud/stampy.git
     branch: master
-    private_key: {{git-private-key}}
+    private_key: {{github-private-key}}
 
 - name: src-ci
   type: git
   source:
     uri: git@github.com:SUSE/stampy-ci.git
     branch: master
-    private_key: {{git-private-key}}
+    private_key: {{github-private-key}}
 
 - name: stampy-binary-linux
   source:
