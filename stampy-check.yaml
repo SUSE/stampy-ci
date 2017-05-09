@@ -1,0 +1,227 @@
+resources:
+- name: src
+  type: pull-request
+  source:
+    access_token: {{github-access-token}}
+    branch: master
+    private_key: {{github-private-key}}
+    uri: git@github.com:SUSE/stampy.git
+
+- name: status
+  type: status
+  source:
+    access_token: {{github-access-token}}
+    repo: SUSE/stampy
+
+- name: src-ci
+  type: git
+  source:
+    branch: master
+    private_key: {{github-private-key}}
+    uri: git@github.com:SUSE/stampy-ci.git
+
+- name: stampy-binary-linux
+  type: s3
+  source:
+    access_key_id: {{s3-access-key}}
+    endpoint: {{s3-endpoint}}
+    secret_access_key: {{s3-secret-key}}
+    bucket: stampy
+    regexp: stampy-(.*\.g.*\).linux.amd64\.tgz
+    private: true
+
+- name: stampy-binary-darwin
+  type: s3
+  source:
+    access_key_id: {{s3-access-key}}
+    endpoint: {{s3-endpoint}}
+    secret_access_key: {{s3-secret-key}}
+    bucket: stampy
+    regexp: stampy-(.*\.g.*\).darwin.amd64\.tgz
+    private: true
+
+resource_types:
+- name: pull-request
+  type: docker-image
+  source:
+    repository: heliondevops/concourse-github-pull-request
+- name: status
+  type: docker-image
+  source:
+    repository: heliondevops/concourse-github-status
+
+jobs:
+- name: vet
+  public: true
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - put: status
+    params:
+      context: vet
+      description: go vet check
+      path: src
+      state: pending
+  - task: vet
+    file: src-ci/tasks/vet.yaml
+    on_failure:
+      put: status
+      params:
+        context: vet
+        description: go vet check
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: vet
+        description: go vet check
+        path: src
+        state: success
+
+- name: test
+  public: true
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - put: status
+    params:
+      context: test
+      description: go test check
+      path: src
+      state: pending
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: test
+    privileged: true
+    file: src-ci/tasks/test.yaml
+    on_failure:
+      put: status
+      params:
+        context: test
+        description: go test check
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: test
+        decription: go test check
+        path: src
+        state: success
+
+- name: lint
+  public: true
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - put: status
+    params:
+      context: lint
+      description: go lint check
+      path: src
+      state: pending
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: lint
+    file: src-ci/tasks/lint.yaml
+    on_failure:
+      put: status
+      params:
+        context: lint
+        description: go lint check
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: lint
+        description: go lint check
+        path: src
+        state: success
+
+- name: format
+  public: true
+  plan:
+  - aggregate:
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - put: status
+    params:
+      context: format
+      description: go format check
+      path: src
+      state: pending
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: format
+    file: src-ci/tasks/format.yaml
+    on_failure:
+      put: status
+      params:
+        context: format
+        description: go format check
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: format
+        description: go format check
+        path: src
+        state: success
+
+- name: dist
+  public: true
+  plan:
+  - aggregate:
+    # Don't use the passed: attribute from the normal pipeline, there is no true
+    # dependency as well as we want all the statuses to be set in parallel.
+    - get: src
+      trigger: true
+    - get: src-ci
+      trigger: true
+  - put: status
+    params:
+      context: dist
+      description: packaging
+      path: src
+      state: pending
+  - task: tools
+    file: src-ci/tasks/tools.yaml
+  - task: build
+    file: src-ci/tasks/build.yaml
+  - aggregate:
+    - task: dist
+      file: src-ci/tasks/dist.yaml
+    on_failure:
+      put: status
+      params:
+        context: dist
+        description: failure
+        path: src
+        state: failure
+    on_success:
+      put: status
+      params:
+        context: dist
+        description: packaging
+        path: src
+        state: success
+  - put: stampy-binary-linux
+    params:
+      file: dist/stampy-*linux-*.tgz
+  - put: stampy-binary-darwin
+    params:
+      file: dist/stampy-*darwin-*.tgz
