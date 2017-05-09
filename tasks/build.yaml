@@ -8,7 +8,7 @@ image_resource:
 
 inputs:
 - name: src
-  path: src/github.com/hpcloud/stampy
+  path: src/github.com/SUSE/stampy
 - name: src-ci
 - name: tools
   path: bin

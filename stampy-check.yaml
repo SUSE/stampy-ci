@@ -5,13 +5,13 @@ resources:
     access_token: {{github-access-token}}
     branch: master
     private_key: {{github-private-key}}
-    uri: git@github.com:hpcloud/stampy.git
+    uri: git@github.com:SUSE/stampy.git
 
 - name: status
   type: status
   source:
     access_token: {{github-access-token}}
-    repo: hpcloud/stampy
+    repo: SUSE/stampy
 
 - name: src-ci
   type: git

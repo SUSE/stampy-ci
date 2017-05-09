@@ -2,4 +2,4 @@
 set -e
 PATH=$PATH:$PWD/bin
 GOPATH=$PWD
-make -C src/github.com/hpcloud/stampy format
+make -C src/github.com/SUSE/stampy format

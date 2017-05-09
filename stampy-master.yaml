@@ -2,7 +2,7 @@ resources:
 - name: src
   type: git
   source:
-    uri: git@github.com:hpcloud/stampy.git
+    uri: git@github.com:SUSE/stampy.git
     branch: master
     private_key: {{github-private-key}}
 

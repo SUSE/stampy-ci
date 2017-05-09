@@ -2,4 +2,4 @@
 set -e
 PATH=$PATH:$PWD/bin
 GOPATH=$PWD
-make -C src/github.com/hpcloud/stampy lint
+make -C src/github.com/SUSE/stampy lint
