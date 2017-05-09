@@ -20,7 +20,7 @@ resources:
     endpoint: {{s3-endpoint}}
     secret_access_key: {{s3-secret-key}}
     bucket: stampy
-    regexp: stampy-(.*)\.g.*linux.amd64\.tgz
+    regexp: stampy-(.*\.g.*)\.linux.amd64\.tgz
     private: true
 
 - name: stampy-binary-darwin
@@ -30,7 +30,7 @@ resources:
     endpoint: {{s3-endpoint}}
     secret_access_key: {{s3-secret-key}}
     bucket: stampy
-    regexp: stampy-(.*)\.g.*darwin.amd64\.tgz
+    regexp: stampy-(.*\.g.*)\.darwin.amd64\.tgz
     private: true
 
 jobs:
