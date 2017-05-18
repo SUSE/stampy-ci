@@ -6,7 +6,7 @@ resources:
     branch: master
     private_key: {{github-private-key}}
 
-- name: src-ci
+- name: ci
   type: git
   source:
     uri: git@github.com:SUSE/stampy-ci.git
@@ -37,49 +37,49 @@ jobs:
 - name: vet
   plan:
   - aggregate:
-    - get: src-ci
+    - get: ci
       trigger: true
     - get: src
       trigger: true
   - task: vet
-    file: src-ci/tasks/vet.yml
+    file: ci/tasks/vet.yml
 
 - name: test
   plan:
   - aggregate:
     - get: src
       trigger: true
-    - get: src-ci
+    - get: ci
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yml
+    file: ci/tasks/tools.yml
   - task: test
     privileged: true
-    file: src-ci/tasks/test.yml
+    file: ci/tasks/test.yml
 
 - name: lint
   plan:
   - aggregate:
     - get: src
       trigger: true
-    - get: src-ci
+    - get: ci
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yml
+    file: ci/tasks/tools.yml
   - task: lint
-    file: src-ci/tasks/lint.yml
+    file: ci/tasks/lint.yml
 
 - name: format
   plan:
   - aggregate:
     - get: src
       trigger: true
-    - get: src-ci
+    - get: ci
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yml
+    file: ci/tasks/tools.yml
   - task: format
-    file: src-ci/tasks/format.yml
+    file: ci/tasks/format.yml
 
 - name: dist
   plan:
@@ -87,15 +87,15 @@ jobs:
     - get: src
       passed: [vet, lint, format, test]
       trigger: true
-    - get: src-ci
+    - get: ci
       passed: [vet, lint, format, test]
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yml
+    file: ci/tasks/tools.yml
   - task: build
-    file: src-ci/tasks/build.yml
+    file: ci/tasks/build.yml
   - task: dist
-    file: src-ci/tasks/dist.yml
+    file: ci/tasks/dist.yml
   - put: stampy-binary-linux
     params:
       file: dist/stampy-*linux-*.tgz
