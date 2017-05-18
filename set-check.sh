@@ -11,5 +11,5 @@ then
     exit 1
 fi
 
-fly -t "$target" set-pipeline -p stampy-check -c stampy-check.yaml \
+fly -t "$target" set-pipeline -p stampy-check -c stampy-check.yml \
     -l <(gpg -d --no-tty "${secrets}" 2> /dev/null)

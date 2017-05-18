@@ -66,7 +66,7 @@ jobs:
       path: src
       state: pending
   - task: vet
-    file: src-ci/tasks/vet.yaml
+    file: src-ci/tasks/vet.yml
     on_failure:
       put: status
       params:
@@ -97,10 +97,10 @@ jobs:
       path: src
       state: pending
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: test
     privileged: true
-    file: src-ci/tasks/test.yaml
+    file: src-ci/tasks/test.yml
     on_failure:
       put: status
       params:
@@ -131,9 +131,9 @@ jobs:
       path: src
       state: pending
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: lint
-    file: src-ci/tasks/lint.yaml
+    file: src-ci/tasks/lint.yml
     on_failure:
       put: status
       params:
@@ -164,9 +164,9 @@ jobs:
       path: src
       state: pending
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: format
-    file: src-ci/tasks/format.yaml
+    file: src-ci/tasks/format.yml
     on_failure:
       put: status
       params:
@@ -199,12 +199,12 @@ jobs:
       path: src
       state: pending
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: build
-    file: src-ci/tasks/build.yaml
+    file: src-ci/tasks/build.yml
   - aggregate:
     - task: dist
-      file: src-ci/tasks/dist.yaml
+      file: src-ci/tasks/dist.yml
     on_failure:
       put: status
       params:

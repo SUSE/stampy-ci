@@ -42,7 +42,7 @@ jobs:
     - get: src
       trigger: true
   - task: vet
-    file: src-ci/tasks/vet.yaml
+    file: src-ci/tasks/vet.yml
 
 - name: test
   plan:
@@ -52,10 +52,10 @@ jobs:
     - get: src-ci
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: test
     privileged: true
-    file: src-ci/tasks/test.yaml
+    file: src-ci/tasks/test.yml
 
 - name: lint
   plan:
@@ -65,9 +65,9 @@ jobs:
     - get: src-ci
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: lint
-    file: src-ci/tasks/lint.yaml
+    file: src-ci/tasks/lint.yml
 
 - name: format
   plan:
@@ -77,9 +77,9 @@ jobs:
     - get: src-ci
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: format
-    file: src-ci/tasks/format.yaml
+    file: src-ci/tasks/format.yml
 
 - name: dist
   plan:
@@ -91,11 +91,11 @@ jobs:
       passed: [vet, lint, format, test]
       trigger: true
   - task: tools
-    file: src-ci/tasks/tools.yaml
+    file: src-ci/tasks/tools.yml
   - task: build
-    file: src-ci/tasks/build.yaml
+    file: src-ci/tasks/build.yml
   - task: dist
-    file: src-ci/tasks/dist.yaml
+    file: src-ci/tasks/dist.yml
   - put: stampy-binary-linux
     params:
       file: dist/stampy-*linux-*.tgz
