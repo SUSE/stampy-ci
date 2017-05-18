@@ -13,7 +13,7 @@ resources:
     branch: master
     private_key: {{github-private-key}}
 
-- name: stampy-binary-linux
+- name: s3.stampy-linux
   type: s3
   source:
     access_key_id: {{s3-access-key}}
@@ -23,7 +23,7 @@ resources:
     regexp: stampy-(.*\.g.*)\.linux.amd64\.tgz
     private: true
 
-- name: stampy-binary-darwin
+- name: s3.stampy-darwin
   type: s3
   source:
     access_key_id: {{s3-access-key}}
@@ -96,11 +96,11 @@ jobs:
     file: ci/tasks/build.yml
   - task: dist
     file: ci/tasks/dist.yml
-  - put: stampy-binary-linux
+  - put: s3.stampy-linux
     params:
       file: dist/stampy-*linux-*.tgz
       acl: public-read
-  - put: stampy-binary-darwin
+  - put: s3.stampy-darwin
     params:
       file: dist/stampy-*darwin-*.tgz
       acl: public-read
