@@ -9,10 +9,10 @@ image_resource:
 inputs:
 - name: src
   path: src/github.com/SUSE/stampy
-- name: src-ci
+- name: ci
 - name: tools
   path: bin
 outputs:
 - name: build
 run:
-  path: src-ci/tasks/build.sh
+  path: ci/tasks/build.sh

@@ -8,6 +8,6 @@ image_resource:
 inputs:
   - name: src
     path: src/github.com/SUSE/stampy
-  - name: src-ci
+  - name: ci
 run:
-  path: src-ci/tasks/vet.sh
+  path: ci/tasks/vet.sh
