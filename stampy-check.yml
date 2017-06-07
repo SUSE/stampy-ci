@@ -44,11 +44,11 @@ resource_types:
 - name: pull-request
   type: docker-image
   source:
-    repository: heliondevops/concourse-github-pull-request
+    repository: splatform/concourse-github-pull-request
 - name: status
   type: docker-image
   source:
-    repository: heliondevops/concourse-github-status
+    repository: splatform/concourse-github-status
 
 jobs:
 - name: vet
