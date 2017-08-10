@@ -16,19 +16,10 @@ To set-pipeline (assuming your instance is called "lol") use the the
 helpers like this:
 
 ```bash
+export CONCOURSE_SECRETS_FILE=~/workspace/SUSE/cloudfoundry/secure/concourse-secrets.yml.gpg
 ./set-master lol
 ./set-check lol
 ```
-
-If the secrets are not in the directory `../cloudfoundry/secure`,
-i.e. a sibling to this CI repository, instead use
-
-```bash
-./set-master lol /path/to/cloudfoundry/secure
-./set-check lol /path/to/cloudfoundry/secure
-```
-
-to explicitly tell the commands the location of the secrets.
 
 ## Testing notes
 
