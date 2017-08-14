@@ -27,5 +27,4 @@ fly \
     set-pipeline \
     -p "${PIPELINE_PREFIX:-}${pipeline_name}" \
     -c "${pipeline_name}.yml" \
-    -v s3-bucket=cf-opensusefs2 \
     -l <(gpg -d --no-tty "${secrets_file}" 2> /dev/null)
